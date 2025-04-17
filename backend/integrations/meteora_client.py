@@ -1,0 +1,51 @@
+import os
+import json
+import asyncio
+from typing import Dict, List, Optional, Tuple
+import httpx
+from dotenv import load_dotenv
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("meteora_client")
+
+# Load environment variables
+load_dotenv()
+
+class MeteoraClient:
+    def __init__(self):
+        self.base_url = "https://api.meteora.ag"  # Note: This might not be the actual API URL
+        logger.info("Initialized Meteora client")
+    
+    async def get_price(self, input_mint: str, output_mint: str, amount: float = 1.0) -> Dict:
+        """Get price for a token pair"""
+        try:
+            # For Meteora, we'll use a simplified approach since their API might be different
+            # In a real implementation, you would use their specific API endpoints
+            
+            # For now, we'll simulate a price with a small variation from the "market price"
+            # This is just for demonstration purposes
+            
+            # Assume SOL/USDC price is around $100
+            if input_mint == "So11111111111111111111111111111111111111112" and output_mint == "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v":
+                price = 100.25  # Slightly higher than market
+                output_amount = amount * price
+            elif input_mint == "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" and output_mint == "So11111111111111111111111111111111111111112":
+                price = 1 / 100.25
+                output_amount = amount * price
+            else:
+                # For other pairs, use a default price (this would be replaced with actual API calls)
+                price = 1.0
+                output_amount = amount
+            
+            return {
+                "inputMint": input_mint,
+                "outputMint": output_mint,
+                "inAmount": amount,
+                "outAmount": output_amount,
+                "price": price
+            }
+        except Exception as e:
+            logger.error(f"Error getting price for {input_mint} -> {output_mint}: {str(e)}")
+            return None
